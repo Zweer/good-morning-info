@@ -1,0 +1,10 @@
+{
+  "name": "good-morning-info",
+  "version": "0.0.1",
+  "description": "Hydra app the handles fast and easy info to read whenever you wake up",
+  "main": "index.js",
+  "repository": "https://github.com/Zweer/good-morning-info.git",
+  "author": "Zweer <n.olivieriachille@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
