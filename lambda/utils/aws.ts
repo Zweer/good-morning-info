@@ -1,6 +1,13 @@
-export function createSuccessMessage(body) {
+import { APIGatewayProxyResult } from 'aws-lambda';
+
+export type ErrorWithStatus = Error & {
+  statusCode: number,
+};
+
+export function createSuccessMessage(body: object): APIGatewayProxyResult {
   const response = {
     statusCode: 200,
+    body: '',
   };
 
   if (body) {
@@ -10,7 +17,7 @@ export function createSuccessMessage(body) {
   return response;
 }
 
-export function createErrorMessage(error) {
+export function createErrorMessage(error: ErrorWithStatus): APIGatewayProxyResult {
   return {
     statusCode: error.statusCode || 500,
     body: JSON.stringify(error),
@@ -18,7 +25,10 @@ export function createErrorMessage(error) {
 }
 
 export function generatePolicy(principalId, effect, resource) {
-  const authResponse = { principalId };
+  const authResponse = {
+    principalId,
+    policyDocument: null,
+  };
 
   if (effect && resource) {
     const policyDocument = {

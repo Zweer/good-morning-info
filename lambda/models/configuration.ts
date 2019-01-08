@@ -1,6 +1,6 @@
-import { Schema, model } from 'dynamoose';
+import * as dynamoose from 'dynamoose';
 
-export const tableName = process.env.TABLE_CONFIGURATION;
+export const tableName = process.env.DB_TABLE_CONFIGURATION;
 export const fields = {
   key: 'key',
   value: 'value',
@@ -24,7 +24,7 @@ const schemaOptions = {
   timestamps: true,
 };
 
-const configurationSchema = new Schema(schemaFields, schemaOptions);
+const configurationSchema = new dynamoose.Schema(schemaFields, schemaOptions);
 
 configurationSchema.static('getValue', async function getValue(key) {
   const configurationItem = await this.get({ [hashKey]: key });
@@ -36,4 +36,4 @@ configurationSchema.static('getValue', async function getValue(key) {
   return configurationItem[fields.value];
 });
 
-export default model(tableName, configurationSchema);
+export default dynamoose.model(tableName, configurationSchema);

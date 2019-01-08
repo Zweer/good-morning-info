@@ -8,8 +8,6 @@
     "moduleResolution": "node"
   },
   "exclude": [
-    ".serverless",
-    ".webpack",
     "node_modules"
   ]
 }
