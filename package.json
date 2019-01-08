@@ -7,6 +7,9 @@
   "author": "Zweer <n.olivieriachille@gmail.com>",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "deploy": "serverless deploy"
+  },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
     "@types/node": "^10.12.18",
@@ -17,5 +20,8 @@
     "tslint-config-airbnb": "^5.11.1",
     "typescript": "^3.2.2",
     "webpack": "^4.28.1"
+  },
+  "dependencies": {
+    "dynamoose": "^1.3.0"
   }
 }
