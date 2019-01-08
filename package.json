@@ -6,5 +6,13 @@
   "repository": "https://github.com/Zweer/good-morning-info.git",
   "author": "Zweer <n.olivieriachille@gmail.com>",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^10.12.18",
+    "serverless": "^1.35.1",
+    "serverless-webpack": "^5.2.0",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.2.2",
+    "webpack": "^4.28.1"
+  }
 }
