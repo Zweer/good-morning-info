@@ -4,24 +4,21 @@ export type ErrorWithStatus = Error & {
   statusCode: number,
 };
 
-export function createSuccessMessage(body: object): APIGatewayProxyResult {
-  const response = {
-    statusCode: 200,
-    body: '',
+function createMessage(statusCode: number, bodyObj: object): APIGatewayProxyResult {
+  const body = JSON.stringify(bodyObj);
+
+  return {
+    statusCode,
+    body,
   };
+}
 
-  if (body) {
-    response.body = JSON.stringify(body);
-  }
-
-  return response;
+export function createSuccessMessage(data: object): APIGatewayProxyResult {
+  return createMessage(200, { data });
 }
 
 export function createErrorMessage(error: ErrorWithStatus): APIGatewayProxyResult {
-  return {
-    statusCode: error.statusCode || 500,
-    body: JSON.stringify(error),
-  };
+  return createMessage(error.statusCode || 500, { error });
 }
 
 export function generatePolicy(principalId, effect, resource) {
