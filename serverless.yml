@@ -37,6 +37,23 @@ functions:
       - http:
           path: config
           method: get
+  config-get:
+    handler: lambda/configuration.get
+    events:
+      - http:
+          path: config/{configKey}
+          method: get
+          request:
+            parameters:
+              paths:
+                configKey: true
+  config-set:
+    handler: lambda/configuration.set
+    events:
+    - http:
+        path: config
+        method: post
+
 
 resources:
   Resources:

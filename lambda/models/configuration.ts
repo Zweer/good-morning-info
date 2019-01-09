@@ -5,7 +5,12 @@ export const fields = {
   key: 'key',
   value: 'value',
 };
+export type fields = {
+  key: string,
+  value: object,
+};
 export const hashKey = fields.key;
+export type key = string;
 
 const schemaFields = {
   [hashKey]: {
@@ -36,4 +41,8 @@ configurationSchema.static('getValue', async function getValue(key) {
   return configurationItem[fields.value];
 });
 
-export default dynamoose.model(tableName, configurationSchema);
+interface ConfigurationModel<DataSchema, KeySchema> extends dynamoose.ModelConstructor<DataSchema, KeySchema> {
+  getValue: (key: string) => Promise<object>;
+}
+
+export default dynamoose.model(tableName, configurationSchema) as ConfigurationModel<fields, key>;
