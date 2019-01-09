@@ -1,14 +1,15 @@
 {
   "name": "good-morning-info",
   "version": "0.0.1",
-  "description": "Hydra app the handles fast and easy info to read whenever you wake up",
+  "description": "Hydra app that handles fast and easy info to read whenever you wake up",
   "main": "index.js",
   "repository": "https://github.com/Zweer/good-morning-info.git",
   "author": "Zweer <n.olivieriachille@gmail.com>",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "deploy": "serverless deploy"
+    "deploy": "serverless deploy",
+    "serverless": "serverless"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
