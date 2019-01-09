@@ -48,7 +48,7 @@ functions:
               paths:
                 configKey: true
   config-set:
-    handler: lambda/configuration.set
+    handler: lambda/configuration.bulkSet
     events:
     - http:
         path: config

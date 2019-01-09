@@ -15,7 +15,7 @@ export function get(event, context, callback) {
     .catch(error => callback(null, createErrorMessage(error)));
 }
 
-export function set(event, context, callback) {
+export function bulkSet(event, context, callback) {
   const { body } = event;
 
   let bodyObj = {};
