@@ -1,39 +1,45 @@
 import configuration, { fields } from './models/configuration';
-import { createSuccessMessage, createErrorMessage } from './utils/aws';
+import { parseBody, getApiProxy } from './utils/aws';
 
-export function list(event, context, callback) {
-  configuration.scan().exec()
-    .then(configItems => callback(null, createSuccessMessage(configItems)))
-    .catch(error => callback(null, createErrorMessage(error)));
-}
+type apiConfiguration = {
+  list: Function,
+  listHandler: Function,
 
-export function get(event, context, callback) {
+  bulkSet: Function,
+  bulkSetHandler: Function,
+
+  get: Function,
+  getHandler: Function,
+
+  set: Function,
+  setHandler: Function,
+};
+
+const api = getApiProxy() as apiConfiguration;
+
+api.list = () => configuration.scan().exec();
+export const list = async event => api.listHandler(event);
+
+api.bulkSet = (event) => {
+  const body = parseBody(event);
+
+  return Promise
+    .all(Object.keys(body)
+      .map(key => configuration.update(key, { [fields.value]: body[key] })));
+};
+export const bulkSet = async event => api.bulkSetHandler(event);
+
+api.get = (event) => {
   const { configKey } = event.pathParameters;
 
-  configuration.getValue(configKey)
-    .then(configValue => callback(null, createSuccessMessage(configValue)))
-    .catch(error => callback(null, createErrorMessage(error)));
-}
+  return configuration.getValue(configKey);
+};
+export const get = async event => api.getHandler(event);
 
-export function bulkSet(event, context, callback) {
-  const { body } = event;
+api.set = (event) => {
+  const { pathParameters: { configKey } } = event;
+  const body = parseBody(event);
 
-  let bodyObj = {};
-
-  try {
-    bodyObj = JSON.parse(body);
-  } catch (error) {
-    body
-      .split('&')
-      .map(keyValue => keyValue.split('='))
-      .forEach(([key, value]) => {
-        bodyObj[key] = value;
-      });
-  }
-
-  Promise
-    .all(Object.keys(bodyObj)
-      .map(key => configuration.update(key, { [fields.value]: bodyObj[key] })))
-    .then(changed => callback(null, createSuccessMessage(changed)))
-    .catch(error => callback(null, createErrorMessage(error)));
-}
+  return configuration.update(configKey, { [fields.value]: body });
+};
+export const set = async event => api.setHandler(event);
