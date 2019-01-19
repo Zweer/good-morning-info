@@ -41,12 +41,13 @@ functions:
     handler: lambda/configuration.get
     events:
       - http:
-          path: config/{configKey}
+          path: config/{hash}/{range}
           method: get
           request:
             parameters:
               paths:
-                configKey: true
+                hash: true
+                range: true
   config-set:
     handler: lambda/configuration.bulkSet
     events:
@@ -64,9 +65,13 @@ resources:
         AttributeDefinitions:
           - AttributeName: key
             AttributeType: S
+          - AttributeName: keyRange
+            AttributeType: S
         KeySchema:
           - AttributeName: key
             KeyType: HASH
+          - AttributeName: keyRange
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

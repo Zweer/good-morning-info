@@ -1,22 +1,34 @@
 import * as dynamoose from 'dynamoose';
 
 export const tableName = process.env.DB_TABLE_CONFIGURATION;
+export const hashKey = Symbol('category');
+export const rangeKey = Symbol('keyRange');
 export const fields = {
-  key: 'key',
-  value: 'value',
+  key: hashKey,
+  range: rangeKey,
+  value: Symbol('value'),
 };
 export type fields = {
   key: string,
+  range: string,
   value: object,
 };
-export const hashKey = fields.key;
-export type key = string;
+export type key = {
+  [hashKey]: string,
+  [rangeKey]: string,
+};
 
 const schemaFields = {
   [hashKey]: {
     type: String,
     required: true,
     hashKey: true,
+  },
+
+  [rangeKey]: {
+    type: String,
+    required: true,
+    rangeKey: true,
   },
 
   [fields.value]: {
@@ -31,8 +43,8 @@ const schemaOptions = {
 
 const configurationSchema = new dynamoose.Schema(schemaFields, schemaOptions);
 
-configurationSchema.static('getValue', async function getValue(key) {
-  const configurationItem = await this.get({ [hashKey]: key });
+configurationSchema.static('getValue', async function getValue(key, range) {
+  const configurationItem = await this.get({ [hashKey]: key, [rangeKey]: range });
 
   if (!configurationItem) {
     return undefined;
@@ -42,7 +54,7 @@ configurationSchema.static('getValue', async function getValue(key) {
 });
 
 interface ConfigurationModel<DataSchema, KeySchema> extends dynamoose.ModelConstructor<DataSchema, KeySchema> {
-  getValue: (key: string) => Promise<object>;
+  getValue: (key: string, range: string) => Promise<object>;
 }
 
 export default dynamoose.model(tableName, configurationSchema) as ConfigurationModel<fields, key>;
